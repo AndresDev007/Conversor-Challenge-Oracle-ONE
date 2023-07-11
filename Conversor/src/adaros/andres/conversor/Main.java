@@ -12,11 +12,16 @@ public class Main {
 		if (seleccion == "moneda") { //Si el usuario elige moneda
 			String monedaOrigen = eleccion.ventanaMonedaOrigen(); //Moneda de origen seleccionada
 			String monedaDestino = eleccion.ventanaMonedaDestino(); // Moneda de destino seleccionada
-			double valor = eleccion.ventanaValor();
+			double valor = eleccion.ventanaValor(); //Obteniendo el valor ingresado por el usuario
 			
-			Conversor conversor = new Conversor(seleccion, monedaOrigen, monedaDestino, valor); //Instancia al conversor
-			conversor.resultadoMoneda(); //Realiza la operación de conversión
-			conversor.ventanaResultado(); // Muestra el resultado de la conversión en una ventana
+			if (valor == 0) {
+				eleccion.ventanaError(); //llamamos a la ventana error si el caracter ingresado no corresponde a un double mayor a cero
+			}else {
+				Conversor conversor = new Conversor(seleccion, monedaOrigen, monedaDestino, valor); //Instancia al conversor
+				conversor.resultadoMoneda(); //Realiza la operación de conversión
+				conversor.ventanaResultado(); // Muestra el resultado de la conversión en una ventana
+			}
+			
 
 		}
 		

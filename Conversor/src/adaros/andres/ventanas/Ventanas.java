@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 public class Ventanas {
 		
 	Object[] opciones = {"moneda", "temperatura", "presión"}; //Opciones para tipo de conversión
-	Object[] tiposMonedas = {"Peso Chileno", "Dólar", "Euros", "Libras Esterlinas", "Yen Japonés", "Won sul-coreano"}; // Opciones tipos de monedas para convertir
+	Object[] tiposMonedas = {"Peso Chileno", "Dólar", "Euro", "Libra Esterlina", "Yen Japonés", "Won sul-coreano"}; // Opciones tipos de monedas para convertir
 	
 	public String ventanaSeleccion(){ //ventana de eleccion de tipo de conversión
 				
@@ -33,10 +33,26 @@ public class Ventanas {
 	
 	public double ventanaValor(){ // Ventana para ingresar el valor numérico a convertir
 		
-		double valor = Double.parseDouble((String)JOptionPane.showInputDialog(null, "Ingresa el valor a convertir",
-				"Conversor de moneda", JOptionPane.PLAIN_MESSAGE,
-				null, null, null)); 
-		return valor;
+		try {
+			double valor = Double.parseDouble((String)JOptionPane.showInputDialog(null, "Ingresa el valor a convertir",
+					"Conversor de moneda", JOptionPane.PLAIN_MESSAGE,
+					null, null, null)); 
+			if (valor < 0) {
+				return 0;
+			}
+			return valor;
+			
+		} catch (Exception NumberFormatException) { //Atrapamos el error en caso que el valor no sea de tipo Double
+			return 0;
+		}
+
 	};
+	
+	public void ventanaError() { //Ventana de error si se ingresan valores que no sean números o valores menores a 0
+		JOptionPane.showMessageDialog(null,
+				"Solo se permiten valores numéricos y mayores a cero!",
+				"Error", JOptionPane.ERROR_MESSAGE); 
+	}
+	
 	
 }
