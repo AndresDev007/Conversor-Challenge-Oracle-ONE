@@ -111,14 +111,14 @@ public class Conversor {
 				this.resultado = this.valor * valores.getValue(); // Multiplica por el valor de esa clave
 			}
 		}
-		
 	}
 	/*
 	 * Ventana que muestra el resultado
 	 */
 	public void ventanaResultado(){ 
 		JOptionPane.showMessageDialog(null,
-			    this.valor + " = " + this.resultado,
+			    this.origen + " = " + this.valor + "\n" +
+			    this.destino + " = " + this.resultado,
 			    "Valor de "+ this.origen + " a " + this.destino,
 			    JOptionPane.PLAIN_MESSAGE);
 	};

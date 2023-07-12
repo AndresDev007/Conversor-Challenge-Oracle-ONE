@@ -54,5 +54,14 @@ public class Ventanas {
 				"Error", JOptionPane.ERROR_MESSAGE); 
 	}
 	
+	public int ventanaContinuar() {		
+		int continuar = JOptionPane.showConfirmDialog(
+			    null,
+			    "¿Realizar otra conversión?",
+			    "Continuar?",
+			    JOptionPane.YES_NO_OPTION);
+		return continuar;
+	}
+	
 	
 }
