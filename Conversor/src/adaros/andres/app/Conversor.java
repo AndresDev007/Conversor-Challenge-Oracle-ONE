@@ -1,4 +1,4 @@
-package adaros.andres.ventanas;
+package adaros.andres.app;
 
 import javax.swing.JOptionPane;
 import java.util.HashMap;
