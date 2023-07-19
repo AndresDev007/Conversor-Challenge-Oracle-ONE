@@ -2,6 +2,9 @@ package adaros.andres.igu;
 
 import java.awt.EventQueue;
 
+import java.util.List;
+import java.util.ArrayList;
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -27,6 +30,7 @@ import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Dialog.ModalExclusionType;
+import java.awt.Dimension;
 import java.awt.Window.Type;
 import java.awt.SystemColor;
 import javax.swing.border.SoftBevelBorder;
@@ -43,25 +47,44 @@ import java.awt.Insets;
 import javax.swing.JTextPane;
 import javax.swing.JFormattedTextField;
 import javax.swing.border.LineBorder;
-public class InterfazGrafica extends JFrame {
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.ActionEvent;
+public class InterfazGrafica extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private JTextField textFieldEntrada;
 	
+	String [] listasMoneda;
+	String[] listaVelocidad;
+	String[] listaPeso;
+	
+	
 	private JComboBox comboBoxTipoConversion = new JComboBox();
+	JComboBox comboBoxOrigen = new JComboBox();
+	JComboBox comboBoxDestino = new JComboBox();
+
 	
 	/**
 	 * Constructor.
 	 */
 	public InterfazGrafica() {
 		
-		/*Icóno, título, tamaño, comportamiento cierre de ventana*/
+		/**********inicio Configuración principal*****************************************/
+		/*Icóno, título*/
 		setIconImage(Toolkit.getDefaultToolkit().getImage("D:\\Mis archivos\\cursos\\one_oracle_alura\\Etapa alumno\\Conversor_de_monedas_Challenge\\Conversor\\src\\adaros\\andres\\recursos\\icono.png"));
 		setTitle("Conversor");
+		/*Comportamiento cierre de ventana y tamaño*/
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 368);
 		
-		/**********Inicio menú**********/
+		/*Centrar ventana en la pantalla*/
+		setLocationRelativeTo(null);
+		/*Bloqueo de la modificación del tamaño de la ventana*/
+		setResizable(false);
+		/**********Fin configuración principal********************************************/
+		
+		/**********Inicio menú************************************************************/
 		/*Barra menú*/
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(0, 0, 0, 0));
@@ -87,9 +110,9 @@ public class InterfazGrafica extends JFrame {
 		JMenuItem mntmSalir = new JMenuItem("   Salir");
 		mntmSalir.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 10));
 		mnMen.add(mntmSalir);
-		/**********Fin menú**********/
+		/**********Fin menú***************************************************************/
 		
-		/**********Inicio paneles**********/
+		/**********Inicio paneles*********************************************************/
 		/*Panel*/
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -110,10 +133,17 @@ public class InterfazGrafica extends JFrame {
 		panelSecundario.setBounds(10, 11, 416, 287);
 		panelPrincipal.add(panelSecundario);
 		panelSecundario.setLayout(null);
-		/**********Fin paneles**********/
+		/**********Fin paneles************************************************************/
 		
 		
-		/*************Inicio componentes*************/
+		/*************Inicio componentes**************************************************/
+		/*Imagen de fondo*/
+		JLabel lblImgFondo = new JLabel("");
+		lblImgFondo.setBackground(UIManager.getColor("List.foreground"));
+		lblImgFondo.setIcon(new ImageIcon("D:\\Mis archivos\\cursos\\one_oracle_alura\\Etapa alumno\\Conversor_de_monedas_Challenge\\Conversor\\src\\adaros\\andres\\recursos\\instrumentos.png"));
+		lblImgFondo.setBounds(0, 0, 416, 287);
+		panelSecundario.add(lblImgFondo);
+		
 		/*Label tipo de conversión*/
 		JLabel lblTipoConversion = new JLabel("Tipo de conversión");
 		lblTipoConversion.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
@@ -122,11 +152,18 @@ public class InterfazGrafica extends JFrame {
 		lblTipoConversion.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		/*Lista desplegable tipo de conversión*/
-		
+		//Captura del item seleccionado
+		comboBoxTipoConversion.addActionListener(new ActionListener() {
+			private String tipoConversion;
+			public void actionPerformed(ActionEvent e) {
+				this.tipoConversion = (String) comboBoxTipoConversion.getSelectedItem();
+				setConversion(this.tipoConversion);
+			}
+		});
 		comboBoxTipoConversion.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		comboBoxTipoConversion.setBounds(26, 36, 184, 22);
 		panelSecundario.add(comboBoxTipoConversion);
-		comboBoxTipoConversion.setModel(new DefaultComboBoxModel(new String[] {"Selecciona una opción"}));
+		comboBoxTipoConversion.setModel(new DefaultComboBoxModel(new String[] {"Selecciona una opción"}));		
 		
 		/*Label Origen*/
 		JLabel lblOrigen = new JLabel("Origen");
@@ -136,11 +173,18 @@ public class InterfazGrafica extends JFrame {
 		lblOrigen.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		/*Lista desplegable origen*/
-		JComboBox comboBoxOrigen = new JComboBox();
+		//Captura del item seleccionado
+		comboBoxOrigen.addActionListener(new ActionListener() {
+			private String origen;
+			public void actionPerformed(ActionEvent e) {
+				this.origen = (String)comboBoxOrigen.getSelectedItem();
+				bloqueoSeleccion(this.origen);
+			}
+		});
 		comboBoxOrigen.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		comboBoxOrigen.setBounds(26, 94, 184, 22);
 		panelSecundario.add(comboBoxOrigen);
-		comboBoxOrigen.setModel(new DefaultComboBoxModel(new String[] {"Selecciona una opción", "Peso Chileno", "Dólar", "Euro", "Libra Esterlina", "Yen Japonés", "Won sul-coreano\""}));
+		comboBoxOrigen.setModel(new DefaultComboBoxModel(new String[] {"Selecciona una opción"}));
 		
 		/*Label destino*/
 		JLabel lblDestino = new JLabel("Destino");
@@ -150,11 +194,10 @@ public class InterfazGrafica extends JFrame {
 		lblDestino.setHorizontalAlignment(SwingConstants.CENTER);
 
 		/*Lista desplegable destino*/
-		JComboBox comboBoxDestino = new JComboBox();
 		comboBoxDestino.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		comboBoxDestino.setBounds(26, 152, 184, 22);
 		panelSecundario.add(comboBoxDestino);
-		comboBoxDestino.setModel(new DefaultComboBoxModel(new String[] {"Selecciona una opción", "Peso Chileno", "Dólar", "Euro", "Libra Esterlina", "Yen Japonés", "Won sul-coreano\""}));
+		comboBoxDestino.setModel(new DefaultComboBoxModel(new String[] {"Selecciona una opción"}));
 		
 		/*Label valor de entrada*/
 		JLabel lblValorDeEntrada = new JLabel("Valor en Euros");
@@ -189,7 +232,7 @@ public class InterfazGrafica extends JFrame {
 		lblValorSalidaValor.setBackground(new Color(192, 192, 192));
 		lblValorSalidaValor.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		/*>>>>>Inicio botones<<<<<*/
+		/*>>>>>Inicio botones<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 		/*Boton convertir*/
 		JButton btnConvertir = new JButton("Convertir");
 		btnConvertir.setBounds(67, 219, 89, 23);
@@ -199,29 +242,156 @@ public class InterfazGrafica extends JFrame {
 		JButton btnLimpiar = new JButton("Limpiar");
 		btnLimpiar.setBounds(271, 219, 89, 23);
 		panelSecundario.add(btnLimpiar);
-		/*>>>>>Fin botones<<<<<*/	
+		/*>>>>>Fin botones<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/	
+		/*************Fin componentes******************************************************/
 		
-		/*Imagen de fondo*/
-		JLabel lblImgFondo = new JLabel("");
-		lblImgFondo.setBackground(UIManager.getColor("List.foreground"));
-		lblImgFondo.setIcon(new ImageIcon("D:\\Mis archivos\\cursos\\one_oracle_alura\\Etapa alumno\\Conversor_de_monedas_Challenge\\Conversor\\src\\adaros\\andres\\recursos\\instrumentos.png"));
-		lblImgFondo.setBounds(0, 0, 416, 287);
-		panelSecundario.add(lblImgFondo);
-		setLocationRelativeTo(null);
-		/*************Fin componentes*************/
 	}	
-	
+		
 	/*
-	 * Métodos
+	 * Inicio métodos+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	 */
-	/*Set lista tipo de conversion*/
+	/*Set lista principal tipo de conversion*********************************************/
 	public void setListaTipoConversion (String[] listaTipoConversion) {
-	for (String items : listaTipoConversion) {
-		comboBoxTipoConversion.addItem(items);
+		for (String items : listaTipoConversion) {
+			comboBoxTipoConversion.addItem(items);
+		}
 	}
-};
+	
+	/*Obtencion datos listas desplegables*/
+	public void datosListas(String[] listasMoneda, String[] listaVelocidad, String[] listaPeso) {
+		this.listasMoneda = listasMoneda;
+		this.listaVelocidad = listaVelocidad;
+		this.listaPeso = listaPeso;
+	}
 
 	
+	
+	/*Inicio Configurando el tipo de conversión seleccionado por el usuario*/
+	String tipoDeConversion;
+	private void setConversion(Object tipoConversion) {
+		tipoDeConversion = (String) tipoConversion;
+		
+		switch (tipoDeConversion) {
+		case "Moneda": {
+			setMonedas();
+			break;
+		}
+		case "Velocidad": {
+			setVelocidad();	
+			break;
+		}
+		case "Peso": {
+			setPeso();	
+			break;
+		}
+//		default:
+
+		}
+	}
+	/*Fin Configurando el tipo de conversión seleccionado por el usuario*/
+
+	/*Inicio set de Opciones lista desplegables para el usuario**************************/
+	private void setMonedas() {
+		resetItems();
+		
+		for (String items : this.listasMoneda) {
+			comboBoxOrigen.addItem(items);
+			comboBoxDestino.addItem(items);
+		}
+		
+	}
+	
+	private void setVelocidad() {
+		resetItems();
+		
+		for (String items : this.listaVelocidad) {
+			comboBoxOrigen.addItem(items);
+			comboBoxDestino.addItem(items);
+		}
+	}
+	
+	private void setPeso() {
+		resetItems();
+		
+		for (String items : this.listaPeso) {
+			comboBoxOrigen.addItem(items);
+			comboBoxDestino.addItem(items);
+		}
+
+	}
+	/*Fin set de Opciones lista desplegables para el usuario**************************/
+	
+	/*Reestablecimiento de listas para configurar el destino*/
+	private void restablecerItems () {
+		switch (tipoDeConversion) {
+		case "Moneda": {
+			comboBoxDestino.removeAllItems();
+			comboBoxDestino.addItem("Selecciona una opción");
+			for (String items : this.listasMoneda) {
+				comboBoxDestino.addItem(items);
+			}
+			break;
+		}
+		case "Velocidad": {
+			comboBoxDestino.removeAllItems();
+			comboBoxDestino.addItem("Selecciona una opción");
+			for (String items : this.listaVelocidad) {
+				comboBoxDestino.addItem(items);
+			}
+			break;
+		}
+		case "Peso": {
+			comboBoxDestino.removeAllItems();
+			comboBoxDestino.addItem("Selecciona una opción");
+			for (String items : this.listaPeso) {
+				comboBoxDestino.addItem(items);
+			}
+			break;
+		}
+		}
+	}
+	
+	/*Busca la seleccion de origen, restablece y borra el item origen en destino*/
+	private void bloqueoSeleccion(String origen) { //EN PROCESO PARA BORRAR EL ITEM SELECCIONADO EN DESTINO
+
+		if (origen != null) {
+			
+			boolean estaEnJComboBox = false;
+			for (int i = 0; i < comboBoxDestino.getItemCount(); i++) {
+			    if (origen.equals(comboBoxDestino.getItemAt(i))) {
+			        estaEnJComboBox = true;
+			        break;
+			    }
+			}
+			if (estaEnJComboBox) {
+				restablecerItems();
+			    comboBoxDestino.removeItem(origen);
+			} 
+			
+		}
+		
+	}
+	
+	//Borra todos los items de origen y destino y agrega uno
+	private void resetItems () {
+
+		comboBoxOrigen.removeAllItems();
+		comboBoxDestino.removeAllItems();
+		comboBoxOrigen.addItem("Selecciona una opción");
+		comboBoxDestino.addItem("Selecciona una opción");
+
+	}
+	
+	//En desarrollo
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// USAR SOLO PARA EL COMPORTAMIENTO DE BOTONES EN DESARROLLO
+		
+	}
+		
+	/*
+	 * Fin métodos+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	
 	
 	
