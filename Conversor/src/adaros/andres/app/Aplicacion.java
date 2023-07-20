@@ -4,7 +4,6 @@ import adaros.andres.igu.*;
 
 public class Aplicacion extends InterfazGrafica {
 	
-	InterfazGrafica pantalla;
 	String[] listaTipoConversion = {"Moneda", "Velocidad", "Peso"};
 	
 	String[] listasMoneda = {"Peso Chileno", "Dólar", "Euro", "Libra Esterlina", 
@@ -16,12 +15,12 @@ public class Aplicacion extends InterfazGrafica {
 	/*Constructor de clase*/
 	public Aplicacion(){
 		/*Instanciando la interfáz gráfica*/
-		pantalla = new InterfazGrafica();
+		InterfazGrafica pantalla = new InterfazGrafica();
 		pantalla.setVisible(true);	
 		
 		/*set comboBox tipoConversion*/
 		pantalla.setListaTipoConversion(listaTipoConversion);
+		/*Set datos de las listas origen y destino*/
 		pantalla.datosListas(listasMoneda, listaVelocidad, listaPeso);
-	}
-	
+	}	
 }

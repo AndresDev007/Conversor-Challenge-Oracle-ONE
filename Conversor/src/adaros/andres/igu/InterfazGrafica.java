@@ -1,9 +1,12 @@
 package adaros.andres.igu;
 
+import adaros.andres.app.Conversor;
+
 import java.awt.EventQueue;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.text.DecimalFormat;
 
 
 import javax.swing.JFrame;
@@ -29,6 +32,8 @@ import javax.swing.JList;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dimension;
 import java.awt.Window.Type;
@@ -43,6 +48,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.Insets;
 import javax.swing.JTextPane;
 import javax.swing.JFormattedTextField;
@@ -55,15 +62,25 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 	private JPanel contentPane;
 	private JTextField textFieldEntrada;
 	
-	String [] listasMoneda;
-	String[] listaVelocidad;
-	String[] listaPeso;
+	private String [] listasMoneda;
+	private String[] listaVelocidad;
+	private String[] listaPeso;
 	
+	private String selectOption = "Selecciona una opción";
+	private String tipoConversion;
+	private String origen;
+	private String destino;
+	private double valorEntrada;
+	private double resultado;
+	
+	private JButton btnConvertir;
+	private JButton btnLimpiar;
+	
+	private JLabel lblValorSalidaValor;
 	
 	private JComboBox comboBoxTipoConversion = new JComboBox();
-	JComboBox comboBoxOrigen = new JComboBox();
-	JComboBox comboBoxDestino = new JComboBox();
-
+	private JComboBox comboBoxOrigen = new JComboBox();
+	private JComboBox comboBoxDestino = new JComboBox();
 	
 	/**
 	 * Constructor.
@@ -154,16 +171,15 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		/*Lista desplegable tipo de conversión*/
 		//Captura del item seleccionado
 		comboBoxTipoConversion.addActionListener(new ActionListener() {
-			private String tipoConversion;
 			public void actionPerformed(ActionEvent e) {
-				this.tipoConversion = (String) comboBoxTipoConversion.getSelectedItem();
-				setConversion(this.tipoConversion);
+				tipoConversion = (String) comboBoxTipoConversion.getSelectedItem();
+				setConversion(tipoConversion);
 			}
 		});
 		comboBoxTipoConversion.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		comboBoxTipoConversion.setBounds(26, 36, 184, 22);
 		panelSecundario.add(comboBoxTipoConversion);
-		comboBoxTipoConversion.setModel(new DefaultComboBoxModel(new String[] {"Selecciona una opción"}));		
+		comboBoxTipoConversion.setModel(new DefaultComboBoxModel(new String[] {selectOption}));		
 		
 		/*Label Origen*/
 		JLabel lblOrigen = new JLabel("Origen");
@@ -175,16 +191,15 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		/*Lista desplegable origen*/
 		//Captura del item seleccionado
 		comboBoxOrigen.addActionListener(new ActionListener() {
-			private String origen;
 			public void actionPerformed(ActionEvent e) {
-				this.origen = (String)comboBoxOrigen.getSelectedItem();
-				bloqueoSeleccion(this.origen);
+				origen = (String)comboBoxOrigen.getSelectedItem();
+				bloqueoSeleccion(origen);
 			}
 		});
 		comboBoxOrigen.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		comboBoxOrigen.setBounds(26, 94, 184, 22);
 		panelSecundario.add(comboBoxOrigen);
-		comboBoxOrigen.setModel(new DefaultComboBoxModel(new String[] {"Selecciona una opción"}));
+		comboBoxOrigen.setModel(new DefaultComboBoxModel(new String[] {selectOption}));
 		
 		/*Label destino*/
 		JLabel lblDestino = new JLabel("Destino");
@@ -194,23 +209,30 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		lblDestino.setHorizontalAlignment(SwingConstants.CENTER);
 
 		/*Lista desplegable destino*/
+		//Captura del item seleccionado
+		comboBoxDestino.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				destino = (String)comboBoxDestino.getSelectedItem();
+			}
+		});
 		comboBoxDestino.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		comboBoxDestino.setBounds(26, 152, 184, 22);
 		panelSecundario.add(comboBoxDestino);
-		comboBoxDestino.setModel(new DefaultComboBoxModel(new String[] {"Selecciona una opción"}));
+		comboBoxDestino.setModel(new DefaultComboBoxModel(new String[] {selectOption}));
 		
 		/*Label valor de entrada*/
 		JLabel lblValorDeEntrada = new JLabel("Valor en Euros");
 		lblValorDeEntrada.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
-		lblValorDeEntrada.setBounds(241, 49, 175, 27);
+		lblValorDeEntrada.setBounds(220, 49, 196, 27);
 		panelSecundario.add(lblValorDeEntrada);
 		lblValorDeEntrada.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		/*Campo de entrada de dato a convertir*/
 		textFieldEntrada = new JTextField();
+		textFieldEntrada.addActionListener(this);
 		textFieldEntrada.setToolTipText("");
 		textFieldEntrada.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		textFieldEntrada.setBounds(265, 76, 125, 20);
+		textFieldEntrada.setBounds(241, 76, 149, 20);
 		panelSecundario.add(textFieldEntrada);
 		textFieldEntrada.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldEntrada.setColumns(10);
@@ -218,15 +240,15 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		/*Label nombre salida del valor calculado*/
 		JLabel lblValorSalida = new JLabel("Valor en Pesos Chilenos");
 		lblValorSalida.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
-		lblValorSalida.setBounds(241, 122, 175, 27);
+		lblValorSalida.setBounds(215, 117, 201, 27);
 		panelSecundario.add(lblValorSalida);
 		lblValorSalida.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		/*Label resultado en pantalla del valor salida calculado*/
-		JLabel lblValorSalidaValor = new JLabel("$ 5678.087");
-		lblValorSalidaValor.setBorder(new LineBorder(new Color(0, 0, 0)));
+		lblValorSalidaValor = new JLabel("");
+		lblValorSalidaValor.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		lblValorSalidaValor.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblValorSalidaValor.setBounds(241, 147, 175, 27);
+		lblValorSalidaValor.setBounds(241, 147, 149, 27);
 		panelSecundario.add(lblValorSalidaValor);
 		lblValorSalidaValor.setForeground(new Color(0, 0, 128));
 		lblValorSalidaValor.setBackground(new Color(192, 192, 192));
@@ -234,43 +256,41 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		
 		/*>>>>>Inicio botones<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 		/*Boton convertir*/
-		JButton btnConvertir = new JButton("Convertir");
+		btnConvertir = new JButton("Convertir");
 		btnConvertir.setBounds(67, 219, 89, 23);
+		btnConvertir.addActionListener(this);
 		panelSecundario.add(btnConvertir);
 		
 		/*Boton limpiar*/
-		JButton btnLimpiar = new JButton("Limpiar");
+		btnLimpiar = new JButton("Limpiar");
 		btnLimpiar.setBounds(271, 219, 89, 23);
+		btnLimpiar.addActionListener(this);
 		panelSecundario.add(btnLimpiar);
 		/*>>>>>Fin botones<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/	
 		/*************Fin componentes******************************************************/
-		
 	}	
 		
 	/*
 	 * Inicio métodos+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	 */
 	/*Set lista principal tipo de conversion*********************************************/
-	public void setListaTipoConversion (String[] listaTipoConversion) {
+	public void setListaTipoConversion (String[] listaTipoConversion) { //Datos obtenidos desde Aplicacion
 		for (String items : listaTipoConversion) {
 			comboBoxTipoConversion.addItem(items);
 		}
 	}
 	
-	/*Obtencion datos listas desplegables*/
+	/*Obtencion datos listas desplegables*/ //Datos obtenidos desde Aplicacion
 	public void datosListas(String[] listasMoneda, String[] listaVelocidad, String[] listaPeso) {
 		this.listasMoneda = listasMoneda;
 		this.listaVelocidad = listaVelocidad;
 		this.listaPeso = listaPeso;
 	}
-
-	
 	
 	/*Inicio Configurando el tipo de conversión seleccionado por el usuario*/
 	String tipoDeConversion;
 	private void setConversion(Object tipoConversion) {
 		tipoDeConversion = (String) tipoConversion;
-		
 		switch (tipoDeConversion) {
 		case "Moneda": {
 			setMonedas();
@@ -284,78 +304,37 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 			setPeso();	
 			break;
 		}
-//		default:
-
 		}
 	}
 	/*Fin Configurando el tipo de conversión seleccionado por el usuario*/
 
-	/*Inicio set de Opciones lista desplegables para el usuario**************************/
+	/*Inicio set de Opciones lista desplegables para el usuario de origen y destino******/
 	private void setMonedas() {
 		resetItems();
-		
 		for (String items : this.listasMoneda) {
 			comboBoxOrigen.addItem(items);
 			comboBoxDestino.addItem(items);
-		}
-		
+		}	
 	}
-	
 	private void setVelocidad() {
 		resetItems();
-		
 		for (String items : this.listaVelocidad) {
 			comboBoxOrigen.addItem(items);
 			comboBoxDestino.addItem(items);
 		}
 	}
-	
 	private void setPeso() {
 		resetItems();
-		
 		for (String items : this.listaPeso) {
 			comboBoxOrigen.addItem(items);
 			comboBoxDestino.addItem(items);
 		}
-
 	}
 	/*Fin set de Opciones lista desplegables para el usuario**************************/
 	
-	/*Reestablecimiento de listas para configurar el destino*/
-	private void restablecerItems () {
-		switch (tipoDeConversion) {
-		case "Moneda": {
-			comboBoxDestino.removeAllItems();
-			comboBoxDestino.addItem("Selecciona una opción");
-			for (String items : this.listasMoneda) {
-				comboBoxDestino.addItem(items);
-			}
-			break;
-		}
-		case "Velocidad": {
-			comboBoxDestino.removeAllItems();
-			comboBoxDestino.addItem("Selecciona una opción");
-			for (String items : this.listaVelocidad) {
-				comboBoxDestino.addItem(items);
-			}
-			break;
-		}
-		case "Peso": {
-			comboBoxDestino.removeAllItems();
-			comboBoxDestino.addItem("Selecciona una opción");
-			for (String items : this.listaPeso) {
-				comboBoxDestino.addItem(items);
-			}
-			break;
-		}
-		}
-	}
-	
 	/*Busca la seleccion de origen, restablece y borra el item origen en destino*/
-	private void bloqueoSeleccion(String origen) { //EN PROCESO PARA BORRAR EL ITEM SELECCIONADO EN DESTINO
-
-		if (origen != null) {
-			
+	private void bloqueoSeleccion(String origen) {
+		if (origen != null && origen != selectOption) {
 			boolean estaEnJComboBox = false;
 			for (int i = 0; i < comboBoxDestino.getItemCount(); i++) {
 			    if (origen.equals(comboBoxDestino.getItemAt(i))) {
@@ -367,41 +346,89 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 				restablecerItems();
 			    comboBoxDestino.removeItem(origen);
 			} 
-			
 		}
-		
+	}
+	
+	/*Reestablecimiento de listas para configurar el destino*/
+	private void restablecerItems () {
+		switch (tipoDeConversion) {
+		case "Moneda": {
+			comboBoxDestino.removeAllItems();
+			comboBoxDestino.addItem(selectOption);
+			for (String items : this.listasMoneda) {
+				comboBoxDestino.addItem(items);
+			}
+			break;
+		}
+		case "Velocidad": {
+			comboBoxDestino.removeAllItems();
+			comboBoxDestino.addItem(selectOption);
+			for (String items : this.listaVelocidad) {
+				comboBoxDestino.addItem(items);
+			}
+			break;
+		}
+		case "Peso": {
+			comboBoxDestino.removeAllItems();
+			comboBoxDestino.addItem(selectOption);
+			for (String items : this.listaPeso) {
+				comboBoxDestino.addItem(items);
+			}
+			break;
+		}
+		}
 	}
 	
 	//Borra todos los items de origen y destino y agrega uno
 	private void resetItems () {
-
 		comboBoxOrigen.removeAllItems();
 		comboBoxDestino.removeAllItems();
-		comboBoxOrigen.addItem("Selecciona una opción");
-		comboBoxDestino.addItem("Selecciona una opción");
-
+		comboBoxOrigen.addItem(selectOption);
+		comboBoxDestino.addItem(selectOption);
 	}
-	
-	//En desarrollo
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// USAR SOLO PARA EL COMPORTAMIENTO DE BOTONES EN DESARROLLO
-		
-	}
-		
 	/*
 	 * Fin métodos+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	 */
 	
+	private void resetAllItems() {
+		
+	}
 	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if (btnLimpiar == e.getSource()) {
+			comboBoxTipoConversion.setSelectedItem(selectOption);
+			comboBoxOrigen.removeAllItems();
+			comboBoxOrigen.addItem(selectOption);
+			comboBoxDestino.removeAllItems();
+			comboBoxDestino.addItem(selectOption);
+			textFieldEntrada.setText("");
+			lblValorSalidaValor.setText("");
+		}
+		
+		if (btnConvertir == e.getSource()) {
+			if (this.origen == null || this.destino == null || this.tipoConversion == null || this.origen == selectOption || this.destino == selectOption || 
+					this.tipoConversion == selectOption) {
+				JOptionPane.showMessageDialog(null, "Complete todos los campos", "Alerta !", JOptionPane.WARNING_MESSAGE);
+			}else {
+				try {
+					valorEntrada = Double.parseDouble(textFieldEntrada.getText());
+					Conversor conversor = new Conversor(tipoConversion, origen, destino, valorEntrada);
+					this.resultado = conversor.resultadoMoneda();
+					DecimalFormat df = new DecimalFormat("#.##"); // Formato de dos decimales
+					String numeroRedondeado = df.format(this.resultado);
+					lblValorSalidaValor.setText(numeroRedondeado);
+				} catch (Exception NumberFormatException) {
+					JOptionPane.showMessageDialog(null, "Inserte un valor válido", "Alerta !", JOptionPane.WARNING_MESSAGE);
+				}
+
+			}
+		}
+		
+
 	
-	
-	
-	
-	
-	
-	
-	
+	}
 	
 	
 }

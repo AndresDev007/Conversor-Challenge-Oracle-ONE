@@ -1,6 +1,5 @@
 package adaros.andres.app;
 
-import javax.swing.JOptionPane;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public class Conversor {
 	}
 	
 	
-	public void resultadoMoneda() { //calculando el resultado con ayuda de un diccionario
+	public double resultadoMoneda() { //calculando el resultado con ayuda de un diccionario
 		Map<String, Double> diccionarioMonedas = new HashMap<String, Double>(); //Declarando un diccionario
 		
 		switch (this.origen) { //Si el origen de la moneda coincide con "Peso Chileno" asigne los siguientes valores de conversión equivalentes a 1 peso chileno
@@ -111,16 +110,7 @@ public class Conversor {
 				this.resultado = this.valor * valores.getValue(); // Multiplica por el valor de esa clave
 			}
 		}
+		return this.resultado;
 	}
-	/*
-	 * Ventana que muestra el resultado
-	 */
-	public void ventanaResultado(){ 
-		JOptionPane.showMessageDialog(null,
-			    this.origen + " = " + this.valor + "\n" +
-			    this.destino + " = " + this.resultado,
-			    "Valor de "+ this.origen + " a " + this.destino,
-			    JOptionPane.PLAIN_MESSAGE);
-	};
 
 }
