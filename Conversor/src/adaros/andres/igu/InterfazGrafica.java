@@ -221,7 +221,7 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		comboBoxDestino.setModel(new DefaultComboBoxModel(new String[] {selectOption}));
 		
 		/*Label valor de entrada*/
-		JLabel lblValorDeEntrada = new JLabel("Valor en Euros");
+		JLabel lblValorDeEntrada = new JLabel("Ingrese valor a convertir");
 		lblValorDeEntrada.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
 		lblValorDeEntrada.setBounds(220, 49, 196, 27);
 		panelSecundario.add(lblValorDeEntrada);
@@ -390,13 +390,10 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 	 * Fin métodos+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	 */
 	
-	private void resetAllItems() {
-		
-	}
-	
+	/*Escucha de eventos****************************************************************/
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		/*Limpiar campos*/
 		if (btnLimpiar == e.getSource()) {
 			comboBoxTipoConversion.setSelectedItem(selectOption);
 			comboBoxOrigen.removeAllItems();
@@ -406,16 +403,32 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 			textFieldEntrada.setText("");
 			lblValorSalidaValor.setText("");
 		}
-		
+		/*Operación para convertir*/
 		if (btnConvertir == e.getSource()) {
+			/*Mensaje de alerta*/
 			if (this.origen == null || this.destino == null || this.tipoConversion == null || this.origen == selectOption || this.destino == selectOption || 
 					this.tipoConversion == selectOption) {
 				JOptionPane.showMessageDialog(null, "Complete todos los campos", "Alerta !", JOptionPane.WARNING_MESSAGE);
 			}else {
 				try {
+					/*Obteniendo el valor de entrada*/
 					valorEntrada = Double.parseDouble(textFieldEntrada.getText());
+					/*Instanciando el conversor*/
 					Conversor conversor = new Conversor(tipoConversion, origen, destino, valorEntrada);
-					this.resultado = conversor.resultadoMoneda();
+					/*Cálculo según tipo de conversión*/
+					switch (tipoConversion) {
+					case "Moneda": {
+						this.resultado = conversor.resultadoMoneda();
+						break;
+					}
+					case "Velocidad": {
+						this.resultado = conversor.resultadoVelocidad();
+					}
+					case "Peso": {
+						this.resultado = conversor.resultadoPeso();
+					}
+					}
+					/*Mostrando el resultado por pantalla*/
 					DecimalFormat df = new DecimalFormat("#.##"); // Formato de dos decimales
 					String numeroRedondeado = df.format(this.resultado);
 					lblValorSalidaValor.setText(numeroRedondeado);
@@ -425,10 +438,6 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 
 			}
 		}
-		
-
-	
 	}
-	
-	
+	/*Fin escucha de eventos***********************************************************/
 }

@@ -20,6 +20,15 @@ public class Conversor {
 	private double yenJapones;
 	private double wonSulCoreano;
 	
+	private double kilometrosHora;
+	private double millasHora;
+	private double pieSegundos;
+	
+	private double kilogramo;
+	private double libra;
+	private double onza;
+	
+	Map<String, Double> diccionarioMonedas = new HashMap<String, Double>(); //Declarando un diccionario
 	
 	/**
 	 * Constructor de clase
@@ -35,9 +44,8 @@ public class Conversor {
 		this.valor = valor;
 	}
 	
-	
+	/* Valores de conversión de moneda*/
 	public double resultadoMoneda() { //calculando el resultado con ayuda de un diccionario
-		Map<String, Double> diccionarioMonedas = new HashMap<String, Double>(); //Declarando un diccionario
 		
 		switch (this.origen) { //Si el origen de la moneda coincide con "Peso Chileno" asigne los siguientes valores de conversión equivalentes a 1 peso chileno
 			case "Peso Chileno": {
@@ -103,6 +111,80 @@ public class Conversor {
 		diccionarioMonedas.put("Libra Esterlina", this.librasEsterlinas);
 		diccionarioMonedas.put("Yen Japonés", this.yenJapones);
 		diccionarioMonedas.put("Won sul-coreano", this.wonSulCoreano);
+		
+		//Recorriendo el diccionario con ayuda de un for each
+		for (Map.Entry<String, Double> valores : diccionarioMonedas.entrySet()) {
+			if (valores.getKey() == this.destino) { //Si la clave del diccionario coincide con la moneda de destino;
+				this.resultado = this.valor * valores.getValue(); // Multiplica por el valor de esa clave
+			}
+		}
+		return this.resultado;
+	}
+	
+	/* Valores de conversión de velocidad*/
+	public double resultadoVelocidad() { 
+		
+		switch (this.origen) { 
+			case "Kilometros/hora": {
+				this.millasHora = 0.621371; // =1
+				this.pieSegundos = 3.28084; // = 1	
+				this.kilometrosHora = 1; // =1
+				break;
+			}
+			case "Millas/hora": {  
+				this.kilometrosHora = 1.60934; // =1
+				this.pieSegundos = 1.46667;
+				this.millasHora = 1;
+				break;
+			}
+			case "Pie/segundo": {
+				this.kilometrosHora = 1.09728;
+				this.millasHora = 0.681818;
+				this.pieSegundos = 1;
+				break;
+			}
+		}
+		
+		diccionarioMonedas.put("Kilometros/hora", this.kilometrosHora);
+		diccionarioMonedas.put("Millas/hora", this.millasHora);
+		diccionarioMonedas.put("Pie/segundo", this.pieSegundos);
+		
+		//Recorriendo el diccionario con ayuda de un for each
+		for (Map.Entry<String, Double> valores : diccionarioMonedas.entrySet()) {
+			if (valores.getKey() == this.destino) { //Si la clave del diccionario coincide con la moneda de destino;
+				this.resultado = this.valor * valores.getValue(); // Multiplica por el valor de esa clave
+			}
+		}
+		return this.resultado;
+	}
+	
+	/* Valores de conversión de velocidad*/
+	public double resultadoPeso() { 
+		
+		switch (this.origen) { 
+			case "Kilogramo": {
+				this.kilogramo = 1; // =1
+				this.libra = 2.20462; // = 1	
+				this.onza = 35.274; // =1
+				break;
+			}
+			case "Libra": {  
+				this.kilogramo = 0.453592; // =1
+				this.libra = 1; // = 1	
+				this.onza = 16; // =1
+				break;
+			}
+			case "Onza": {
+				this.kilogramo = 0.0283495; // =1
+				this.libra = 0.0625; // = 1	
+				this.onza = 1; // =1
+				break;
+			}
+		}
+		
+		diccionarioMonedas.put("Kilogramo", this.kilogramo);
+		diccionarioMonedas.put("Libra", this.libra);
+		diccionarioMonedas.put("Onza", this.onza);
 		
 		//Recorriendo el diccionario con ayuda de un for each
 		for (Map.Entry<String, Double> valores : diccionarioMonedas.entrySet()) {

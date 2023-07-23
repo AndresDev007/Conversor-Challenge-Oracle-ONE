@@ -9,7 +9,7 @@ public class Aplicacion extends InterfazGrafica {
 	String[] listasMoneda = {"Peso Chileno", "Dólar", "Euro", "Libra Esterlina", 
 									"Yen Japonés", "Won Sul-coreano"};
 	
-	String[] listaVelocidad = {"Kilometros/hora", "Millas/hora", "Yarda/hora"};
+	String[] listaVelocidad = {"Kilometros/hora", "Millas/hora", "Pie/segundo"};
 	String[] listaPeso = {"Kilogramo", "Libra", "Onza"};
 	
 	/*Constructor de clase*/
