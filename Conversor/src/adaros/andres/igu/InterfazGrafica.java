@@ -37,6 +37,8 @@ import javax.swing.Icon;
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dimension;
 import java.awt.Window.Type;
+// copiar al portapapeles
+import java.awt.datatransfer.*; // copiar
 import java.awt.SystemColor;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
@@ -56,6 +58,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 public class InterfazGrafica extends JFrame implements ActionListener{
 
@@ -73,10 +76,15 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 	private double valorEntrada;
 	private double resultado;
 	
+	private JMenuItem mntmCopiar;
+	private Clipboard clipboard;
+	
 	private JButton btnConvertir;
 	private JButton btnLimpiar;
 	
 	private JLabel lblValorSalidaValor;
+	private JLabel lblValorDeEntrada;
+	private JLabel lblValorSalida;
 	
 	private JComboBox comboBoxTipoConversion = new JComboBox();
 	private JComboBox comboBoxOrigen = new JComboBox();
@@ -115,16 +123,49 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		
 		/*Item pegar*/
 		JMenuItem mntmPegar = new JMenuItem("   Pegar valor");
+		mntmPegar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		        Transferable transferable = clipboard.getContents(null);
+		        
+		        try {
+					String datoPortapapeles = (String) transferable.getTransferData(DataFlavor.stringFlavor);
+					if (datoPortapapeles != null) {
+						textFieldEntrada.setText(datoPortapapeles);
+					}
+					
+		        } catch (UnsupportedFlavorException m) {
+		        	JOptionPane.showMessageDialog(null, "Formato no soportado", "Alerta !", JOptionPane.WARNING_MESSAGE);
+				} catch (IOException m) {
+					JOptionPane.showMessageDialog(null, "Error, intente otra vez", "Alerta !", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
 		mntmPegar.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 10));
 		mnMen.add(mntmPegar);
 		
 		/*Item copiar*/
-		JMenuItem mntmCopiar = new JMenuItem("   Copiar resultado");
+		mntmCopiar = new JMenuItem("   Copiar resultado");
+		mntmCopiar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				DecimalFormat df = new DecimalFormat("#.##"); // Formato de dos decimales
+				String numRedondeado = df.format(resultado);
+				numRedondeado = numRedondeado.replace(",", ".");
+		        StringSelection selection = new StringSelection(numRedondeado);
+		        clipboard.setContents(selection, null);
+			}
+		});
 		mntmCopiar.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 10));
 		mnMen.add(mntmCopiar);
 		
 		/*Item salir*/
 		JMenuItem mntmSalir = new JMenuItem("   Salir");
+		mntmSalir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+			}
+		});
 		mntmSalir.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 10));
 		mnMen.add(mntmSalir);
 		/**********Fin menú***************************************************************/
@@ -221,8 +262,8 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		comboBoxDestino.setModel(new DefaultComboBoxModel(new String[] {selectOption}));
 		
 		/*Label valor de entrada*/
-		JLabel lblValorDeEntrada = new JLabel("Ingrese valor a convertir");
-		lblValorDeEntrada.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
+		lblValorDeEntrada = new JLabel("Ingrese valor a convertir");
+		lblValorDeEntrada.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
 		lblValorDeEntrada.setBounds(220, 49, 196, 27);
 		panelSecundario.add(lblValorDeEntrada);
 		lblValorDeEntrada.setHorizontalAlignment(SwingConstants.CENTER);
@@ -231,15 +272,17 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		textFieldEntrada = new JTextField();
 		textFieldEntrada.addActionListener(this);
 		textFieldEntrada.setToolTipText("");
-		textFieldEntrada.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		textFieldEntrada.setBounds(241, 76, 149, 20);
+		textFieldEntrada.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textFieldEntrada.setBounds(241, 76, 149, 27);
 		panelSecundario.add(textFieldEntrada);
 		textFieldEntrada.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldEntrada.setColumns(10);
+        Color colorTexto = new Color(0, 0, 128);
+        textFieldEntrada.setForeground(colorTexto);
 		
 		/*Label nombre salida del valor calculado*/
-		JLabel lblValorSalida = new JLabel("Valor en Pesos Chilenos");
-		lblValorSalida.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
+		lblValorSalida = new JLabel("");
+		lblValorSalida.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
 		lblValorSalida.setBounds(215, 117, 201, 27);
 		panelSecundario.add(lblValorSalida);
 		lblValorSalida.setHorizontalAlignment(SwingConstants.CENTER);
@@ -247,11 +290,11 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		/*Label resultado en pantalla del valor salida calculado*/
 		lblValorSalidaValor = new JLabel("");
 		lblValorSalidaValor.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		lblValorSalidaValor.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblValorSalidaValor.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblValorSalidaValor.setBounds(241, 147, 149, 27);
 		panelSecundario.add(lblValorSalidaValor);
 		lblValorSalidaValor.setForeground(new Color(0, 0, 128));
-		lblValorSalidaValor.setBackground(new Color(192, 192, 192));
+	//	lblValorSalidaValor.setBackground(new Color(192, 192, 192));
 		lblValorSalidaValor.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		/*>>>>>Inicio botones<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
@@ -393,6 +436,7 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 	/*Escucha de eventos****************************************************************/
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
 		/*Limpiar campos*/
 		if (btnLimpiar == e.getSource()) {
 			comboBoxTipoConversion.setSelectedItem(selectOption);
@@ -405,6 +449,10 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		}
 		/*Operación para convertir*/
 		if (btnConvertir == e.getSource()) {
+			
+			lblValorDeEntrada.setText("Valor en " + this.origen);
+			lblValorSalida.setText("Valor en " + this.destino);
+			
 			/*Mensaje de alerta*/
 			if (this.origen == null || this.destino == null || this.tipoConversion == null || this.origen == selectOption || this.destino == selectOption || 
 					this.tipoConversion == selectOption) {
@@ -431,6 +479,7 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 					/*Mostrando el resultado por pantalla*/
 					DecimalFormat df = new DecimalFormat("#.##"); // Formato de dos decimales
 					String numeroRedondeado = df.format(this.resultado);
+					numeroRedondeado = numeroRedondeado.replace(",", ".");
 					lblValorSalidaValor.setText(numeroRedondeado);
 				} catch (Exception NumberFormatException) {
 					JOptionPane.showMessageDialog(null, "Inserte un valor válido", "Alerta !", JOptionPane.WARNING_MESSAGE);

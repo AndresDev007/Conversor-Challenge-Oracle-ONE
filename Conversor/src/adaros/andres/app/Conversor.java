@@ -93,7 +93,7 @@ public class Conversor {
 				this.wonSulCoreano = 9.1861;
 				break;
 			}
-			case "Won sul-coreano": {
+			case "Won Sul-coreano": {
 				this.dolar = 0.00077;
 				this.pesoChileno = 0.6286;
 				this.euros = 0.00070;
@@ -110,7 +110,7 @@ public class Conversor {
 		diccionarioMonedas.put("Euro", this.euros);
 		diccionarioMonedas.put("Libra Esterlina", this.librasEsterlinas);
 		diccionarioMonedas.put("Yen Japonés", this.yenJapones);
-		diccionarioMonedas.put("Won sul-coreano", this.wonSulCoreano);
+		diccionarioMonedas.put("Won Sul-coreano", this.wonSulCoreano);
 		
 		//Recorriendo el diccionario con ayuda de un for each
 		for (Map.Entry<String, Double> valores : diccionarioMonedas.entrySet()) {
