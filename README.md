@@ -29,7 +29,7 @@
       - Yen Japonés
       - Won sul-coreano
       
-<p>El proyecto es desarrollado en Java con ayuda de la biblioteca gráfica Swing. Con el tiempo se irán agregando nuevas unidades de conversión, como por ejemplo; presión, temperatura, peso, etc.</p>
+<p>El proyecto es desarrollado en Java con ayuda de la biblioteca gráfica Swing. Con el tiempo se irán agregando nuevas unidades de conversión, como por ejemplo; velocidad, peso, etc.</p>
 
 
 <h3>Características de la aplicación y demostración</h3>
@@ -37,13 +37,16 @@
 Funcionalidades del proyecto
 
 - `Funcionalidad 1`: Conversión de monedas.
-- `Funcionalidad 2`: Conversión de presión (En desarrollo)
-- `Funcionalidad 3`: Conversión de temperatura (Próximamente)
-- `Funcionalidad 4`: Conversión de peso (Próximamente)
+- `Funcionalidad 2`: Conversión de velocidad.
+- `Funcionalidad 3`: Conversión de peso.
+<br>
+<img width="230" alt="Captura de pantalla 2023-07-28 134648" src="https://github.com/Sergio-Adaros/Conversor/assets/77218487/ad26ae16-4c5a-479b-bbbf-bd14e8b8736b">
+<img width="230" alt="Captura de pantalla 2023-07-28 134728" src="https://github.com/Sergio-Adaros/Conversor/assets/77218487/e584a72b-907f-456a-ab79-327dc6ddf997">
+<img width="230" alt="Captura de pantalla 2023-07-28 134748" src="https://github.com/Sergio-Adaros/Conversor/assets/77218487/038b30fa-6fcf-4cc3-81f9-36c8fdbc0d01">
+<img width="230" alt="Captura de pantalla 2023-07-28 134822" src="https://github.com/Sergio-Adaros/Conversor/assets/77218487/89ae23db-50bb-481d-9125-0a78a440f20d">
+<img width="230" alt="Captura de pantalla 2023-07-28 134848" src="https://github.com/Sergio-Adaros/Conversor/assets/77218487/472608bc-1fed-4e32-bbda-099f680c0c66">
 
-<img width="212" alt="Captura de pantalla 2023-07-13 030946" src="https://github.com/Sergio-Adaros/Conversor/assets/77218487/1ba5d684-6278-4f08-95cc-54ba75d7d733">
-<img width="205" alt="Captura de pantalla 2023-07-13 031002" src="https://github.com/Sergio-Adaros/Conversor/assets/77218487/e6d4a7ca-8705-43d5-931c-bb22e80a0371">
-<img width="206" alt="Captura de pantalla 2023-07-13 031033" src="https://github.com/Sergio-Adaros/Conversor/assets/77218487/cd2f1d43-f56c-495f-8362-6eac1694e4e5">
+
 
 <h3>Acceso proyecto</h3>
 
@@ -52,6 +55,7 @@ Funcionalidades del proyecto
 **Pueden descargar el proyecto libremente**
 <br><br>
 \ 🛠️ Abre y ejecuta el proyecto
+<br>
 **Copia el proyecto y ejecutalo desde el IDE Eclipse**
 <br>
 
