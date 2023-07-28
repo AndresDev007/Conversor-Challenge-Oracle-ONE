@@ -63,6 +63,7 @@ Funcionalidades del proyecto
 
 - `Java`
 - `Swing`
+- `WindowBuilder`
   
 <h3>Desarrollador</h3>
 
