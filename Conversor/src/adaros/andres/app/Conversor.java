@@ -49,56 +49,56 @@ public class Conversor {
 		
 		switch (this.origen) { //Si el origen de la moneda coincide con "Peso Chileno" asigne los siguientes valores de conversión equivalentes a 1 peso chileno
 			case "Peso Chileno": {
-				this.dolar = 0.0012; // = 1 peso chileno
+				this.dolar = 0.00120573; // = 1 peso chileno
 				this.pesoChileno = 1; // = 1 peso chileno
-				this.euros = 0.0011; // = 1 peso chileno
-				this.librasEsterlinas = 0.00096; // = 1 peso chileno
-				this.yenJapones = 0.1730; // = 1 peso chileno
-				this.wonSulCoreano = 1.5904; // = 1 peso chileno
+				this.euros = 0.0010932016; // = 1 peso chileno
+				this.librasEsterlinas = 0.00093691759; // = 1 peso chileno
+				this.yenJapones = 0.16996787; // = 1 peso chileno
+				this.wonSulCoreano = 1.5401445; // = 1 peso chileno
 				break;
 			}
 			case "Dólar": {  //Misma lógica que arriba pero con la moneda de origen Dólar
 				this.dolar = 1;
-				this.pesoChileno = 812.8900;
-				this.euros = 0.9078;
-				this.librasEsterlinas = 0.7767;
-				this.yenJapones = 140.7680;
-				this.wonSulCoreano = 1293.9350;
+				this.pesoChileno = 829.373;
+				this.euros = 0.9060557;
+				this.librasEsterlinas = 0.77672368;
+				this.yenJapones = 140.83017;
+				this.wonSulCoreano = 1276.1516;
 				break;
 			}
 			case "Euro": {
-				this.dolar = 1.1014;
-				this.pesoChileno = 895.3252;
+				this.dolar = 1.1034333;
+				this.pesoChileno = 914.8325;
 				this.euros = 1;
-				this.librasEsterlinas = 0.8556;
-				this.yenJapones = 155.0380;
-				this.wonSulCoreano = 1424.8678;
+				this.librasEsterlinas = 0.85707404;
+				this.yenJapones = 155.35892;
+				this.wonSulCoreano = 1408.382;
 				break;
 			}
 			case "Libra Esterlina": {
-				this.dolar = 1.2873;
-				this.pesoChileno = 1046.3520;
-				this.euros = 1.1688;
+				this.dolar = 1.2876925;
+				this.pesoChileno = 1067.2769;
+				this.euros = 1.1669907;
 				this.librasEsterlinas = 1;
-				this.yenJapones = 181.2209;
-				this.wonSulCoreano = 1665.2958;
+				this.yenJapones = 181.27583;
+				this.wonSulCoreano = 1643.0639;
 				break;
 			}
 			case "Yen Japonés": {
-				this.dolar = 0.0071;
-				this.pesoChileno = 5.7732;
-				this.euros = 0.0064;
-				this.librasEsterlinas = 0.0055;
+				this.dolar = 0.0071027219;
+				this.pesoChileno = 5.8901541;
+				this.euros = 0.0064376319;
+				this.librasEsterlinas = 0.005515915;
 				this.yenJapones = 1;
-				this.wonSulCoreano = 9.1861;
+				this.wonSulCoreano = 9.0610289;
 				break;
 			}
 			case "Won Sul-coreano": {
-				this.dolar = 0.00077;
-				this.pesoChileno = 0.6286;
-				this.euros = 0.00070;
-				this.librasEsterlinas = 0.0000060;
-				this.yenJapones = 0.1089;
+				this.dolar = 0.00078378069;
+				this.pesoChileno = 0.64974907;
+				this.euros = 0.00071040897;
+				this.librasEsterlinas = 0.00060869689;
+				this.yenJapones = 0.11037519;
 				this.wonSulCoreano = 1;
 				break;
 			}

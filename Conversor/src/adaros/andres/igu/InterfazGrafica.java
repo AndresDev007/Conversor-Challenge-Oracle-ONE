@@ -131,9 +131,8 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		        try {
 					String datoPortapapeles = (String) transferable.getTransferData(DataFlavor.stringFlavor);
 					if (datoPortapapeles != null) {
-						textFieldEntrada.setText(datoPortapapeles);
+						textFieldEntrada.setText(datoPortapapeles);					
 					}
-					
 		        } catch (UnsupportedFlavorException m) {
 		        	JOptionPane.showMessageDialog(null, "Formato no soportado", "Alerta !", JOptionPane.WARNING_MESSAGE);
 				} catch (IOException m) {
@@ -149,10 +148,10 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 		mntmCopiar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				DecimalFormat df = new DecimalFormat("#.##"); // Formato de dos decimales
-				String numRedondeado = df.format(resultado);
-				numRedondeado = numRedondeado.replace(",", ".");
-		        StringSelection selection = new StringSelection(numRedondeado);
+//				DecimalFormat df = new DecimalFormat("#.####"); // Formato de dos decimales
+//				String numRedondeado = df.format(resultado);
+//				numRedondeado = numRedondeado.replace(",", ".");
+		        StringSelection selection = new StringSelection(Double.toString(resultado));
 		        clipboard.setContents(selection, null);
 			}
 		});
@@ -477,7 +476,8 @@ public class InterfazGrafica extends JFrame implements ActionListener{
 					}
 					}
 					/*Mostrando el resultado por pantalla*/
-					DecimalFormat df = new DecimalFormat("#.##"); // Formato de dos decimales
+										
+					DecimalFormat df = new DecimalFormat("#.####"); // Formato de dos decimales
 					String numeroRedondeado = df.format(this.resultado);
 					numeroRedondeado = numeroRedondeado.replace(",", ".");
 					lblValorSalidaValor.setText(numeroRedondeado);
